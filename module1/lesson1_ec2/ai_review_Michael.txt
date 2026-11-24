@@ -1,0 +1,66 @@
+AI used = Microsoft 365 Copilot
+
+Conversation share link = https://copilot.cloud.microsoft/chat/share/eyJzaGFyZUlkIjoiMmMyMTVmM2UtNjU1OC00NzQ3LTg3NDQtZDUwYzg2YmY2ZWRiIiwiY29udmVyc2F0aW9uSWQiOiJhYmY2NzEyYi1iMTc5LTRiYzctYWY4Mi1mYTA5NjFjODFmZGIifQ==?redirfrom=userTypeCookie&redirfrom=cosmicRingCookie
+(or "see ai_review_transcript_Michael.txt" if using a transcript)
+
+
+Q1: What am I actually doing in this Lesson 1 lab?
+
+AI's answer, in my own words:
+The lab is teaching me how the different layers of an application stack work together rather than just teaching me a collection of Linux commands. EC2 provides the Linux server, Git is used to retrieve the code, the installer builds the Balerica Bank application and COBOL core, FastAPI provides a modern API layer, and the underlying files and SQLite database contain the application data. Repeating the build seven times is intended to make the process familiar enough that I understand the workflow rather than just following instructions.
+
+How I checked it:
+I compared the explanation with the architecture and Steps 0-4 in the Balerica Legacy Bank Student Runbook. I also verified the layers myself during the lab by launching EC2, cloning the Git repository, running the installer, executing the COBOL account_lookup program directly, activating the Python environment, and starting FastAPI with Uvicorn.
+
+
+Q2: Should I use the AMI with Balerica Bank already installed, or start with a fresh EC2 instance for each run?
+
+AI's answer, in my own words:
+For the seven required runs, I need to use fresh EC2 instances and manually perform the build. The AMI with Balerica already installed defeats the purpose of those repetitions because the application has already been built. The golden AMI is a separate automation exercise.
+
+How I checked it:
+I re-read Section 3.1 of the homework. It explicitly says that one run is one brand-new EC2 instance taken through Steps 0-4 by hand and that instances built from a baked launch template or golden AMI do not count toward the required seven runs. I followed that rule and built Balerica manually on seven fresh instances.
+
+
+Q3: Is FastAPI the Slack integration?
+
+AI's answer, in my own words:
+No. FastAPI is the modern API layer of the Balerica application. It provides endpoints that other programs or clients can use to communicate with the application. In this lab it sits in front of the COBOL banking core, allowing modern HTTP/API requests to interact with older business logic.
+
+How I checked it:
+I checked the Student Runbook architecture and API endpoints table. The runbook lists FastAPI endpoints including GET /status, GET /accounts/{id}, POST /payments, GET /transactions, and POST /ask. I also started the FastAPI application myself with Uvicorn and confirmed that the application reached "Application startup complete."
+
+
+Q4: What am I actually doing when I run source venv/bin/activate?
+
+AI's answer, in my own words:
+Activating the venv does not create another VM, container, or separate server. It changes the current shell environment so that the Balerica application uses the Python environment and dependencies installed specifically for the project. The EC2 instance and Linux session remain the same.
+
+How I checked it:
+I compared the explanation with Step 4 of the runbook, which tells me to activate the environment before starting Uvicorn. I also observed that my prompt changed to show (venv) after running source venv/bin/activate. When I opened a new SSH connection later, (venv) was no longer present in that new shell, confirming that the activation applied to the shell session rather than creating another machine.
+
+
+Q5: Why wouldn't I automate the entire Balerica build?
+
+AI's answer, in my own words:
+The build can be automated, but the required seven manual runs are intended to teach me the process before I automate it. Once I understand each component and dependency, automation can reproduce those steps. The homework demonstrates this progression through the optional User Data and golden AMI exercises.
+
+How I checked it:
+I checked the BAM sections of the homework. BAM 2.2 specifically asks me to create a launch template whose User Data installs the lab automatically at boot, while BAM 2.3 asks me to create a golden AMI from an already configured instance. The homework also explicitly says instances created using those automated approaches do not count toward the seven manual runs.
+
+
+Where the AI was wrong, vague, or out of date:
+
+One concrete error occurred with the capitalization of the locally cloned SEIR Foundations repository. Copilot repeatedly gave me an installer path beginning with SEIR-Foundations. On my EC2 instance, the clone output showed:
+
+Cloning into 'SEIR-foundations'...
+
+I verified the actual directory by running ls, which showed:
+
+SEIR-foundations
+
+Because Linux paths are case-sensitive, using SEIR-Foundations resulted in:
+
+bash: SEIR-Foundations/module1/lesson1_ec2/API/install/install.sh: No such file or directory
+
+I corrected the command by using the exact directory name shown by the filesystem. This was a useful example of why I should not assume an AI answer is correct just because the command looks reasonable. I checked the AI's answer against the actual system state and used the Linux output as the authoritative answer.
